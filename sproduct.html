@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Home Page</title>
+</head>
+<body>
+    <section id="header">
+        <a href="#"><img src="media/gamestt.png" class="logo" alt=""></a>
+
+        <div>
+            <ul id="navbar">
+                <li><a href="home.html">Home</a></li>
+                <li><a class="active" href="index.html">Shop</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="lg-bag"><a href="cart.html"><i class="far fa-shopping-bag"></i></a></li>
+                <li id="lg-bag"><a href="login.html">Login</a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
+            <i id="bar" class="fas fa-outdent"></i>
+
+        </div>
+    </section>
+    <section id="prodetails" class="section-p1">
+        <div class="single-pro-image">
+            <img src="" width="100%" id="MainImg" alt="">
+            <div class="small-img-group">
+                <div class="small-img-col">
+                    <img src="" id="SmallImg1" width="100%" class="small-img" alt="">
+                </div>
+                <div class="small-img-col">
+                    <img src="" id="SmallImg2"   width="100%" class="small-img" alt="">
+                </div>
+                <div class="small-img-col">
+                    <img src="" id="SmallImg3"  width="100%" class="small-img" alt="">
+                </div>
+                <div class="small-img-col">
+                    <img src="" id="SmallImg4"  width="100%" class="small-img" alt="">
+                </div>
+                
+            </div>
+        </div>
+        <div class="single-pro-details">
+            <h6 id="category"></h6>
+            <h4 id="productName"></h4>
+            <h2 id="productPrice">$</h2>
+            <input type="number" name="quantity" value="1">
+            <button class="normal" onclick="addToCart()">Add To Cart</button>
+            <h4>Product Details</h4>
+            <span id="productDescription"></span>
+
+        </div>
+    </section>
+
+    <section id="product" class="section-p1"> <!--Feature Products-->
+        <h2>Featured Products</h2>
+        <p>New Products just added</p>
+        <div class="pro-container">
+            <div class="pro">
+                <img src="media/gow.jpg" alt="">
+                <div class="des">
+                    <span>Playstation</span>
+                    <h5>God Of War Ragnarok</h5>
+                    <div class="star">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>$200.00</h4>
+                </div>
+                <a href=""><i class="fal fa-shopping-cart cart"></i></a>
+            </div>
+            <div class="pro">
+                <img src="media/gow.jpg" alt="">
+                <div class="des">
+                    <span>Playstation</span>
+                    <h5>God Of War Ragnarok</h5>
+                    <div class="star">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>$200.00</h4>
+                </div>
+                <a href=""><i class="fal fa-shopping-cart cart"></i></a>
+            </div>
+            <div class="pro">
+                <img src="media/gow.jpg" alt="">
+                <div class="des">
+                    <span>Playstation</span>
+                    <h5>God Of War Ragnarok</h5>
+                    <div class="star">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>$200.00</h4>
+                </div>
+                <a href=""><i class="fal fa-shopping-cart cart"></i></a>
+            </div>
+            <div class="pro">
+                <img src="media/gow.jpg" alt="">
+                <div class="des">
+                    <span>Playstation</span>
+                    <h5>God Of War Ragnarok</h5>
+                    <div class="star">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>$200.00</h4>
+                </div>
+                <a href=""><i class="fal fa-shopping-cart cart"></i></a>
+            </div>
+        </div>
+    </section>
+    
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="media/gamestt.png" alt="">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> High Steet San Fernando</p>
+            <p><strong>Phone:</strong> 1(868)677-4740</p>
+            <p><strong>Hours:</strong> 9:00 - 6:00, Mon - Sat</p>
+            <div class="follow">
+                <h4>Follow us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-pinterest"></i>
+                    <i class="fab fa-youtube"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col">
+            <h4>About</h4>
+            <a href="">About Us</a>
+            <a href="">Delivery Information</a>
+            <a href="">Privacy Policy</a>
+            <a href="">Terms & Conditions</a>
+            <a href="">Contact Us</a>
+
+        </div>
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="">Sign In</a>
+            <a href="">View Cart</a>
+            <a href="">My Wishlist</a>
+            <a href="">Track My Order</a>
+            <a href="">Help</a>
+
+        </div>
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="media/app.jpg" alt="">
+                <img src="media/play.jpg" alt="">
+
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="media/pay.png" alt="">
+        </div>
+        <div class="copyright">
+            <p>&copy;Copyright by Marc Lord. All rights reserved.</p>
+
+        </div>
+    
+    </footer>
+    
+    <script>
+        // Convert ArrayBuffer to base64
+        function arrayBufferToBase64(buffer) {
+            let binary = '';
+            const bytes = new Uint8Array(buffer);
+            for (let i = 0; i < bytes.length; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return btoa(binary);
+        }
+    
+        // Display data according to primary key
+        function loadProductDetails() {
+            var productId = getParameterByName('id');
+    
+            fetch(`http://localhost:3000/products/${productId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(product => {
+                    // Update your HTML elements with product details
+                    var mainImg = document.getElementById('MainImg');
+                    mainImg.src = `data:image/jpeg;base64,${arrayBufferToBase64(product.Image.data)}`;
+                    document.getElementById('productName').innerText = product.Product_Name;
+                    document.getElementById('productPrice').innerText = `$${product.Price.toFixed(2)}`;
+                    document.getElementById('productDescription').innerText = product.Description;
+    
+                    // Set MainImg source to the first small image source
+                    var smallImg1 = document.getElementById('SmallImg1');
+                    smallImg1.src = `data:image/jpeg;base64,${arrayBufferToBase64(product.Image.data)}`;
+                    smallImg1.onclick = function () {
+                        mainImg.src = this.src;
+                    };
+    
+                    var smallImg2 = document.getElementById('SmallImg2');
+                    smallImg2.src = `data:image/jpeg;base64,${arrayBufferToBase64(product.Image2.data)}`;
+                    smallImg2.onclick = function () {
+                        mainImg.src = this.src;
+                    };
+    
+                    var smallImg3 = document.getElementById('SmallImg3');
+                    smallImg3.src = `data:image/jpeg;base64,${arrayBufferToBase64(product.Image3.data)}`;
+                    smallImg3.onclick = function () {
+                        mainImg.src = this.src;
+                    };
+                    var smallImg4 = document.getElementById('SmallImg4');
+                    smallImg4.src = `data:image/jpeg;base64,${arrayBufferToBase64(product.Image4.data)}`;
+                    smallImg4.onclick = function () {
+                        mainImg.src = this.src;
+                    };
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    
+        window.onload = loadProductDetails;
+    </script>
+
+ <script src="script.js"></script>   
+ <script>
+ 
+ function addToCart() {
+    console.log('addToCart function called');
+
+    // Retrieve product details from the page
+    var productId = getParameterByName('id');
+    var productName = document.getElementById('productName').innerText;
+    var productPrice = parseFloat(document.getElementById('productPrice').innerText.replace('$', ''));
+    var quantity = parseInt(document.querySelector('#prodetails input[type="number"]').value);
+    var mainImage = document.getElementById('MainImg').src;  // Get the main image source
+
+    // Log the data being sent to the server
+    console.log('Sending data to server:', {
+        productId: productId,
+        productName: productName,
+        productPrice: productPrice,
+        quantity: quantity,
+        mainImage: mainImage,  // Include the main image source
+    });
+
+    // Send the data to the server
+    fetch('http://localhost:3000/add-to-cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            productId: productId,
+            productName: productName,
+            productPrice: productPrice,
+            quantity: quantity,
+            mainImage: mainImage,  // Include the main image source
+        }),
+    })
+    .then(response => {
+        console.log('Server response status:', response.status);
+        return response.json();
+    })
+    .then(updatedCart => {
+        // Log the response from the server
+        console.log('Server response:', updatedCart);
+
+        // Do something with the updated cart if needed
+
+        // Redirect to cart.html after processing the response
+        window.location.href = 'cart.html';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+        
+
+    // Rest of your existing code...
+</script>
+</body>
+</html>

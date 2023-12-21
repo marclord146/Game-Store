@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+    <link rel="stylesheet" href="css/style.css">
+    <script defer src="https://js.stripe.com/v3/"></script>
+    <script defer src="script.js"></script>
+    <title>Checkout</title>
+</head>
+<body>
+    <section id="header">
+        <a href="#"><img src="media/gamestt.png" class="logo" alt=""></a>
+
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="lg-bag"><a href="cart.html"><i class="far fa-shopping-bag"></i></a></li>
+                <li id="lg-login"><a href="login.html">Login</a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
+            <i id="bar" class="fas fa-outdent"></i>
+
+        </div>
+    </section>
+
+    <section id="page-header">
+        
+        <h2>#Checkout</h2>
+        <p></p>
+
+    </section>
+
+    <form action="/submit-order" method="post" id="checkout-form">
+    <section id="checkout-form" >
+        <h3>Billing/Shipping Information</h3>
+        
+            
+            <div class="name-group">
+                <label for="fname">First Name</label>
+                <input type="text" name="fname" id="fname">
+                <label for="lname">Last Name</label>
+                <input type="text" name="lname" id="lname">
+            </div>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email">
+            <label for="phone">Address</label>
+            <input type="text" name="address" id="address">
+            <label for="phone">Phone</label>
+            <input type="text" name="phone" id="phone">
+
+        
+
+
+    </section>
+    <section id="payment-form" >
+        <h3>Payment Information</h3>
+        
+        <div id="card-element"></div>
+        <div id="card-errors"></div>
+    </section>
+    
+    <button class="normal" id="submitBtn">Checkout</button>
+    </form>
+
+    
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="media/gamestt.png" alt="">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> High Steet San Fernando</p>
+            <p><strong>Phone:</strong> 1(868)677-4740</p>
+            <p><strong>Hours:</strong> 9:00 - 6:00, Mon - Sat</p>
+            <div class="follow">
+                <h4>Follow us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-pinterest"></i>
+                    <i class="fab fa-youtube"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col">
+            <h4>About</h4>
+            <a href="">About Us</a>
+            <a href="">Delivery Information</a>
+            <a href="">Privacy Policy</a>
+            <a href="">Terms & Conditions</a>
+            <a href="">Contact Us</a>
+
+        </div>
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="">Sign In</a>
+            <a href="">View Cart</a>
+            <a href="">My Wishlist</a>
+            <a href="">Track My Order</a>
+            <a href="">Help</a>
+
+        </div>
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="media/app.jpg" alt="">
+                <img src="media/play.jpg" alt="">
+
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="media/pay.png" alt="">
+        </div>
+        <div class="copyright">
+            <p>&copy;Copyright by Marc Lord. All rights reserved.</p>
+
+        </div>
+    
+    </footer>
+    
+
+
+
+   
+    <script>
+function getFormData() {
+    const formData = {
+        fname: document.getElementById('fname').value,
+        lname: document.getElementById('lname').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+        phone: document.getElementById('phone').value,
+        // Add other form fields as needed
+    };
+    return formData;
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const stripe = Stripe('pk_test_51N5HUTKEkL2KQIeIeKZRYdCV4M3PAZx8Yir73oFqwpE9PyXUWYUwPeeHfLRl6fZot3kYccDbmT1xfNCSM27zTMRM00ZlvKAmkZ');
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
+
+    card.addEventListener('change', (event) => {
+        const displayError = document.getElementById('card-errors');
+        displayError.textContent = event.error ? event.error.message : '';
+    });
+
+    document.getElementById('submitBtn').addEventListener('click', async function (event) {
+        event.preventDefault();
+        // Fetch cartItems from the server
+        
+        const cartItems = loadCartItems();
+        const formData = getFormData();
+        await submitOrder(formData,cartItems);
+    });
+});
+
+async function submitOrder(formData, cartItems) {
+    const response = await fetch('/submit-order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            formData,
+            cartItems,
+        }),
+    });
+
+    const data = await response.json();
+    console.log('Server response (Submit Order):', data);
+
+    if (data.success) {
+        // Order submission success, proceed to payment
+        await submitPayment();
+    } else {
+        // Order submission error, handle accordingly
+    }
+}
+
+        async function submitPayment() {
+            const stripe = Stripe('pk_test_51N5HUTKEkL2KQIeIeKZRYdCV4M3PAZx8Yir73oFqwpE9PyXUWYUwPeeHfLRl6fZot3kYccDbmT1xfNCSM27zTMRM00ZlvKAmkZ');
+            const elements = stripe.elements();
+            const card = elements.create('card');
+            card.mount('#card-element');
+
+            const { token, error } = await stripe.createToken(card);
+
+            if (error) {
+                console.error('Error creating token:', error);
+            } else {
+                await processPayment(token.id);
+            }
+        }
+
+        async function processPayment(token) {
+            const response = await fetch('/process-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    paymentMethodId: token,
+                    amount: calculateTotalAmount(), // Fetch the total amount from the cart
+                    currency: 'usd', // Replace with your desired currency
+                }),
+            });
+
+            const data = await response.json();
+            console.log('Server response (Process Payment):', data);
+
+            if (data.success) {
+                // Payment success, you can redirect or perform other actions
+            } else {
+                // Payment error, handle accordingly
+            }
+        }
+
+        function calculateTotalAmount() {
+            // Fetch the total amount from the cart page
+            // Assuming you have an element with an id 'total-amount'
+            const cartTotalElement = document.getElementById('total-amount');
+
+            // Ensure the element exists and contains a valid number
+            if (cartTotalElement && !isNaN(parseFloat(cartTotalElement.innerText))) {
+                return parseFloat(cartTotalElement.innerText) * 100; // Assuming the total is in cents
+            } else {
+                // Return a default value or handle the case where the total amount is not available
+                return 0;
+            }
+        }
+function mapCartItems(cartItems) {
+    return cartItems.map(item => ({
+        pID: item.productId,
+        product: item.productName,
+        image: item.mainImage,
+        price: item.productPrice,
+        quantity: item.quantity,
+        // Add other properties as needed
+    }));
+}
+
+function loadCartItems() {
+    // Assuming you have an endpoint to retrieve cart items from the server
+    const cartItemsEndpoint = 'http://localhost:3000/cart-items';
+
+    return fetch(cartItemsEndpoint)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch cart items');
+            }
+            return response.json();
+        })
+        .then(cartItems => {
+            console.log('Loaded cart items:', cartItems);
+            return cartItems;
+        })
+        .catch(error => {
+            console.error('Error loading cart items:', error);
+            return []; // Return an empty array or handle the error as needed
+        });
+}
+    </script>
+
+
+    
+    
+</body>
+</html>

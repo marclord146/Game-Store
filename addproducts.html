@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="sidebar">
+            <a href="Ahome.html"><img src="media/gamestt.png" class="logo" alt=""></a>
+            <ul>
+                <li><a href="Aproducts.html">Products</a></li>
+                <li><a href="Aorders.html">Orders</a></li>
+                <li><a href="admins.html">Administrators</a></li>
+            </ul>
+
+        </div>
+
+    </div>
+
+    <section id="products-form">
+        <h2>Add Products to Inventory</h2>
+        <form action="/insert-product" method="POST" enctype="multipart/form-data">
+            <label for="productname">Product Name</label> 
+            <input type="text" name="productname" id="productname">
+
+            <label for="brand">Brand</label> 
+            <input type="text" name="brand" id="brand">
+
+            <label for="category">Category</label>
+            <input type="text" name="category" id="category">
+
+            <label for="price">Price</label>
+            <input type="text" name="price" id="price">
+
+            <label for="quantity">Quantity</label>
+            <input type="number" name="quantity" id="quantity">
+
+            <label for="image">Main Image:</label>
+            <input type="file" name="image" id="image">
+            <label for="image">Sub Image 1:</label>
+            <input type="file" name="image2" id="image2">
+            <label for="image">Sub Image 2:</label>
+            <input type="file" name="image3" id="image3">
+            <label for="image">Sub Image 3:</label>
+            <input type="file" name="image4" id="image4">
+            
+            <label for="description">Description</label>
+            <textarea name="description" id="description" cols="30" rows="10"></textarea>
+
+            <input type="submit" value="Add">
+        </form>
+
+    </section>
+
+    
+</body>
+</html>

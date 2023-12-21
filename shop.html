@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Products</title>
+</head>
+<body>
+    <section id="header">
+        <a href="#"><img src="media/gamestt.png" class="logo" alt=""></a>
+
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a class="active" href="shop.html">Shop</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="lg-bag"><a href="cart.html"><i class="far fa-shopping-bag"></i></a></li>
+                <li id="lg-bag"><a href="login.html">Login</a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
+            <i id="bar" class="fas fa-outdent"></i>
+
+        </div>
+    </section>
+    <section id="page-header">
+        
+        <h2>#play more</h2>
+        <p>Save more with coupons up to 70% off!</p>
+
+    </section>
+    <section id="product" class="section-p1"> <!--Feature Products-->
+        <div class="pro-container" id="product-container">
+            
+        </div>
+    </section>
+    
+    <script>
+        // Fetch the product data from the server
+    fetch('http://localhost:3000/products')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const products = data;
+        const productContainer = document.getElementById('product-container');
+
+        // Iterate through the products and generate HTML elements for each product
+        products.forEach((product) => {
+            const productHTML = `
+                <div class="pro" onclick="redirectToSProduct(${product.pID});">
+                    <img src="data:image/jpeg;base64,${arrayBufferToBase64(product.Image.data)}" alt="" id="productImage">
+                    <div class="des">
+                        <span>${product.Category}</span>
+                        <h5>${product.Product_Name}</h5>
+                        <div class="star">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h4>${product.Price}</h4>
+                    </div>
+                    <a href="sproduct.html?id=${product.pID}"><i class="fal fa-shopping-cart cart"></i></a>
+                </div>
+            `;
+            productContainer.insertAdjacentHTML('beforeend', productHTML);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+     // Convert ArrayBuffer to base64
+     function arrayBufferToBase64(buffer) {
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        for (let i = 0; i < bytes.length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary);
+    }
+
+
+    </script>
+    
+    <script>
+        function redirectToSProduct(productId) {
+            window.location.href = `sproduct.html?id=${productId}`;
+        }
+    </script>
+    
+
+    <section id="pagination" class="section-p1">
+        <a href="#">1</a>
+        <a href="#">2</a>
+        <a href="#"><i class="fal fa-long-arrow-alt-right"></i></a>
+
+
+
+
+    </section>
+    
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="media/gamestt.png" alt="">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> High Steet San Fernando</p>
+            <p><strong>Phone:</strong> 1(868)677-4740</p>
+            <p><strong>Hours:</strong> 9:00 - 6:00, Mon - Sat</p>
+            <div class="follow">
+                <h4>Follow us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-pinterest"></i>
+                    <i class="fab fa-youtube"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col">
+            <h4>About</h4>
+            <a href="">About Us</a>
+            <a href="">Delivery Information</a>
+            <a href="">Privacy Policy</a>
+            <a href="">Terms & Conditions</a>
+            <a href="">Contact Us</a>
+
+        </div>
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="">Sign In</a>
+            <a href="">View Cart</a>
+            <a href="">My Wishlist</a>
+            <a href="">Track My Order</a>
+            <a href="">Help</a>
+
+        </div>
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="media/app.jpg" alt="">
+                <img src="media/play.jpg" alt="">
+
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="media/pay.png" alt="">
+        </div>
+        <div class="copyright">
+            <p>&copy;Copyright by Marc Lord. All rights reserved.</p>
+
+        </div>
+    
+    </footer>
+    
+
+
+
+ <script src="script.js"></script>   
+ 
+</body>
+</html>

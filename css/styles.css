@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@100;200;300;400;500;600;700;800;900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+}
+body{
+    background: #f3f5f9;
+}
+.wrapper{
+    display: flex;
+    position: relative;
+
+}
+.wrapper .sidebar{
+    position:fixed;
+    width: 200px;
+    height: 100%;
+    background:black;
+    padding:30px 0;
+    z-index:1;
+}
+.wrapper .sidebar img{
+    width:60%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 15px;
+}
+.wrapper .sidebar ul li{
+    padding: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-top: 1px solid rgba(225,225,225,0.05);
+}
+.wrapper .sidebar ul li a{
+    color: white;
+    font-weight: bold;
+    display: block;
+}
+.wrapper .sidebar ul li:hover{
+    background: red;
+    cursor: pointer;
+}
+#products-table {
+    padding: 30px; /* Add padding for spacing */
+    margin-left: 220px;
+}
+
+#products-table h2 {
+    color: black;
+    text-align: center; /* Center the text */
+    font-size: 45px;
+}
+#products-table .add-button  {
+    background: black; /* Green background color, change as needed */
+    color: white;
+    padding: 15px;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin-top: 20px; /* Adjust as needed for spacing */
+    cursor: pointer;
+    margin-bottom: 60px;
+
+}
+.add-button a{
+    color: white;
+}
+
+#products-table .add-button:hover {
+    background: red; /* Darker green on hover, change as needed */
+}
+table{
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    white-space: nowrap;
+}
+table th{
+    font-size: 20px;
+    padding-bottom: 20px;
+}
+table th:nth-child(1){
+    width: 50px;
+    text-align: center;
+
+}
+table th:nth-child(2){
+    width: 50px;
+    text-align: center;
+
+}
+table th:nth-child(3){
+    width: 100px;
+    text-align: center;
+
+}
+table th:nth-child(4), table th:nth-child(5){
+    width: 75px;
+    text-align: center;
+
+}
+table th:nth-child(6){
+    width: 75px;
+    text-align: center;
+
+}
+#table-body{
+    color: black;
+    font-size: 20px;
+    text-align: center;
+}
+#table-body td i{
+    color:black;
+}
+#table-body td i:hover{
+    color:red;
+}
+.edit-button{
+    padding:15px 20px;
+    font-size: 20px;
+    background: black;
+    color: white;
+}
+.edit-button:hover{
+    background:red;
+    transition: 0.3s;
+}
+#products-form {
+    padding: 30px; /* Add padding for spacing */
+    margin-left: 220px;
+}
+
+#products-form h2 {
+    color: black;
+    text-align: center; /* Center the text */
+    font-size: 45px;
+    padding-bottom: 20px;
+}
+#products-form form{
+    display: grid;
+    gap: 3px; /* Adjust the gap as needed */
+    grid-template-columns: max-content 1fr;
+}
+#products-form label{
+    font-size: 25px;
+    text-align: right;
+    padding-right: 10px; /* Adjust the padding as needed */
+    
+}
+#products-form form input[type=text]{
+    font-size: 25px;
+    width: 30%;
+    height: 50%;
+    margin-bottom: 30px;
+    box-sizing: border-box;
+    padding: 12px 20px;
+
+}
+#products-form form input[type=number]{
+    font-size: 25px;
+    width:5%;
+    padding: 6px 6px;
+    margin-bottom: 30px;
+}
+#products-form form input[type=file]{
+    font-size: 25px;
+    margin-bottom: 30px;
+    display: block;
+
+}
+#products-form form textarea{
+    font-size: 25px;
+    padding: 16px;
+}
+#products-form form input[type=submit]{
+    margin-top: 40px;
+    font-size: 25px;
+    background-color: black;
+    height: 70%;
+    color: white;
+  
+    
+    
+}
+#products-form form input[type=submit]:hover{
+    background-color: red;
+    transition: 0.3s;
+
+}

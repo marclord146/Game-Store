@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="sidebar">
+            <a href="Ahome.html"><img src="media/gamestt.png" class="logo" alt=""></a>
+            <ul>
+                <li><a href="Aproducts.html">Products</a></li>
+                <li><a href="Aorders.html">Orders</a></li>
+                <li><a href="admins.html">Administrators</a></li>
+            </ul>
+
+        </div>
+        
+
+    </div>
+
+    <section id="products-table">
+        <h2>Products</h2>
+
+        <button class="add-button"><a href="addproducts.html">Add Products</a></button>
+        <br>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Remove</th>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+
+            </tbody>
+
+        </table>
+    </section>
+    <script src="server.js"></script>
+    <script>
+        // Fetch the product data from the server
+ fetch('http://localhost:3000/products')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const products = data;
+        const tableBody = document.getElementById('table-body');
+
+        // Iterate through the products and generate HTML elements for each product
+        products.forEach(product => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><i class="fas fa-trash-alt"></i></td>
+                <td>${product.pID}</td>
+                <td>${product.Product_Name}</td>
+                <td>${product.Price}</td>
+                <td>${product.Quantity}</td>
+                <td><button class="edit-button">Edit</button></td>
+            `;
+            tableBody.appendChild(row);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+    </script>
+
+    
+</body>
+</html>

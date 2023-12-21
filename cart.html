@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Cart</title>
+</head>
+<body>
+    <section id="header">
+        <a href="#"><img src="media/gamestt.png" class="logo" alt=""></a>
+
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="lg-bag"><a class="active" href="cart.html"><i class="far fa-shopping-bag"></i></a></li>
+                <li id="lg-login"><a href="login.html">Login</a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
+            <i id="bar" class="fas fa-outdent"></i>
+
+        </div>
+    </section>
+
+    <section id="page-header">
+        
+        <h2>#Cart</h2>
+        <p></p>
+
+    </section>
+
+    <section id="cart" class="section-p1"> <!--Cart Table-->
+        <table width="100%">
+            <thead> <!--Table Headings-->
+                <tr>
+                    <td>Remove</td>
+                    <td>Image</td>
+                    <td>Product</td>
+                    <td>Price</td>
+                    <td>Quantity</td>
+                    <td>Subtotal</td>
+                </tr>
+            </thead>
+            <tbody id="cart-body">
+             
+               
+            </tbody>
+        </table>
+
+    </section>
+
+    <section id="cart-add" class="section-p1">
+        <div id="coupon">
+            <h3>Apply Coupon</h3>
+            <div>
+                <input type="text" name="" id="" placeholder="Enter Coupon">
+                <button class="normal">Apply</button>
+            </div>
+        </div>
+        <div id="subtotal">
+            <h3>Cart Total</h3>
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td id="subtotal-amount">$0.00</td>
+                </tr>
+                <tr>
+                    <td>Shipping</td>
+                    <td>Free</td>
+                </tr>
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td><strong id="total-amount">$0.00</strong></td>
+                </tr>
+            </table>
+            <button class="normal" onclick="proceedToCheckout()">Proceed to Checkout</button>
+        </div>
+
+    </section>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="media/gamestt.png" alt="">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> High Steet San Fernando</p>
+            <p><strong>Phone:</strong> 1(868)677-4740</p>
+            <p><strong>Hours:</strong> 9:00 - 6:00, Mon - Sat</p>
+            <div class="follow">
+                <h4>Follow us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-pinterest"></i>
+                    <i class="fab fa-youtube"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col">
+            <h4>About</h4>
+            <a href="">About Us</a>
+            <a href="">Delivery Information</a>
+            <a href="">Privacy Policy</a>
+            <a href="">Terms & Conditions</a>
+            <a href="">Contact Us</a>
+
+        </div>
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="">Sign In</a>
+            <a href="">View Cart</a>
+            <a href="">My Wishlist</a>
+            <a href="">Track My Order</a>
+            <a href="">Help</a>
+
+        </div>
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="media/app.jpg" alt="">
+                <img src="media/play.jpg" alt="">
+
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="media/pay.png" alt="">
+        </div>
+        <div class="copyright">
+            <p>&copy;Copyright by Marc Lord. All rights reserved.</p>
+
+        </div>
+    
+    </footer>
+    
+
+
+
+ <script src="script.js"></script>   
+ 
+
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        loadCartItems();
+        
+    });
+
+    function loadCartItems() {
+  fetch('http://localhost:3000/cart-items')
+    .then(response => response.json())
+    .then(cartItems => {
+      const cartBody = document.getElementById('cart-body');
+      const subtotalAmount = document.getElementById('subtotal-amount');
+      const totalAmount = document.getElementById('total-amount');
+
+      // Clear existing cart items
+      cartBody.innerHTML = '';
+
+      let subtotal = 0;
+
+      cartItems.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><a href="#" onclick="removeCartItem(${item.productId})"><i class="far fa-times-circle"></i></a></td>
+          <td><img src="${item.mainImage}" alt=""></td>
+          <td>${item.productName}</td>
+          <td>$${item.productPrice.toFixed(2)}</td>
+          <td><input type="number" name="" id="" value="${item.quantity}" onchange="updateCartItemQuantity(${item.productId}, this.value)"></td>
+          <td>$${(item.productPrice * item.quantity).toFixed(2)}</td>
+        `;
+
+        cartBody.appendChild(row);
+        subtotal += item.productPrice * item.quantity;
+      });
+
+      // Update subtotal and total amounts
+      subtotalAmount.innerText = `$${subtotal.toFixed(2)}`;
+      totalAmount.innerText = `$${subtotal.toFixed(2)}`;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+} 
+
+function updateCartItemQuantity(productId, newQuantity) {
+    const url = `http://localhost:3000/update-cart-item/${productId}?quantity=${newQuantity}`;
+
+    fetch(url, {
+        method: 'PUT',
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(updatedCart => {
+        // Log the response from the server
+        console.log('Server response:', updatedCart);
+
+        // Reload cart items after updating quantity
+        loadCartItems();
+
+        // Update subtotal and total amounts in the UI
+        updateCartTotal(updatedCart);
+    })
+    .catch(error => {
+        console.error('Error updating quantity:', error);
+    });
+}
+
+
+
+    function updateCartTotal(cartItems) {
+        const cartBody = document.getElementById('cart-body');
+        const subtotalAmount = document.getElementById('subtotal-amount');
+        const totalAmount = document.getElementById('total-amount');
+
+        // Clear existing cart items
+        cartBody.innerHTML = '';
+
+        let subtotal = 0;
+
+        cartItems.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><a href="#" onclick="removeCartItem(${item.productId})"><i class="far fa-times-circle"></i></a></td>
+                <td><img src="${item.mainImage}" alt=""></td>
+                <td>${item.productName}</td>
+                <td>$${item.productPrice.toFixed(2)}</td>
+                <td><input type="number" name="" id="" value="${item.quantity}" onchange="updateCartItemQuantity(${item.productId}, this.value)"></td>
+                <td>$${(item.productPrice * item.quantity).toFixed(2)}</td>
+            `;
+
+            cartBody.appendChild(row);
+            subtotal += item.productPrice * item.quantity;
+        });
+
+        // Update subtotal and total amounts
+        subtotalAmount.innerText = `$${subtotal.toFixed(2)}`;
+        totalAmount.innerText = `$${subtotal.toFixed(2)}`;
+    }
+
+    function removeCartItem(productId) {
+    // Make a request to the server to remove the item from the cart
+    fetch(`http://localhost:3000/remove-cart-item/${productId}`, {
+        method: 'DELETE',
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(updatedCart => {
+        // Log the response from the server
+        console.log('Server response:', updatedCart);
+
+        // Reload cart items after removing the item
+        loadCartItems();
+
+        // Update subtotal and total amounts in the UI
+        updateCartTotal(updatedCart);
+    })
+    .catch(error => {
+        console.error('Error removing item:', error);
+    });
+}
+
+
+
+
+
+
+    function proceedToCheckout() {
+    // Add logic for handling the checkout process
+    console.log('Proceeding to checkout...');
+
+    const cartItems = loadCartItems();
+    const totalAmount = document.getElementById('total-amount').innerText;
+
+    // Store cart information in localStorage
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    localStorage.setItem('totalAmount', totalAmount);
+    // Redirect to the checkout page or perform other necessary actions
+    window.location.href = 'checkout.html';
+    }
+
+
+   
+</script>
+</body>
+</html>

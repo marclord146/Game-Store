@@ -43,6 +43,7 @@
     <form action="/submit-order" method="post" id="checkout-form">
     <section id="checkout-form" >
         <h3>Billing/Shipping Information</h3>
+        <h5><strong id="total-amount"></strong></h5>
         
             
             <div class="name-group">
@@ -68,6 +69,7 @@
         <div id="card-element"></div>
         <div id="card-errors"></div>
     </section>
+    
     
     <button class="normal" id="submitBtn">Checkout</button>
     </form>
@@ -149,6 +151,13 @@ function getFormData() {
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const totalAmount = urlParams.get('totalAmount');
+
+    // Update the total amount in the UI
+    const totalAmountElement = document.getElementById('total-amount');
+    totalAmountElement.innerText = `$${Number(totalAmount).toFixed(2)}`;
     const stripe = Stripe('pk_test_51N5HUTKEkL2KQIeIeKZRYdCV4M3PAZx8Yir73oFqwpE9PyXUWYUwPeeHfLRl6fZot3kYccDbmT1xfNCSM27zTMRM00ZlvKAmkZ');
     const elements = stripe.elements();
     const card = elements.create('card');
@@ -159,17 +168,22 @@ document.addEventListener('DOMContentLoaded', async function () {
         displayError.textContent = event.error ? event.error.message : '';
     });
 
+
+
+  
+
     document.getElementById('submitBtn').addEventListener('click', async function (event) {
         event.preventDefault();
-        // Fetch cartItems from the server
-        
-        const cartItems = loadCartItems();
-        const formData = getFormData();
-        await submitOrder(formData,cartItems);
+        const { cartItems} = await loadCartItems();
+        const formData = getFormData(); // Move formData declaration here
+        console.log('formData:', formData); // Check if formData is defined
+        console.log('totalAmount:', totalAmount)
+        await submitOrder(formData,  totalAmount);
     });
 });
 
-async function submitOrder(formData, cartItems) {
+async function submitOrder(formData, totalAmount) {
+    
     const response = await fetch('/submit-order', {
         method: 'POST',
         headers: {
@@ -177,16 +191,17 @@ async function submitOrder(formData, cartItems) {
         },
         body: JSON.stringify({
             formData,
-            cartItems,
+            totalAmount,
         }),
     });
 
     const data = await response.json();
     console.log('Server response (Submit Order):', data);
+    
 
     if (data.success) {
         // Order submission success, proceed to payment
-        await submitPayment();
+        await submitPayment(totalAmount);
     } else {
         // Order submission error, handle accordingly
     }
@@ -203,11 +218,11 @@ async function submitOrder(formData, cartItems) {
             if (error) {
                 console.error('Error creating token:', error);
             } else {
-                await processPayment(token.id);
+                await processPayment(token.id, totalAmount);
             }
         }
 
-        async function processPayment(token) {
+        async function processPayment(token,totalAmount) {
             const response = await fetch('/process-payment', {
                 method: 'POST',
                 headers: {
@@ -230,19 +245,19 @@ async function submitOrder(formData, cartItems) {
             }
         }
 
-        function calculateTotalAmount() {
-            // Fetch the total amount from the cart page
-            // Assuming you have an element with an id 'total-amount'
-            const cartTotalElement = document.getElementById('total-amount');
+    function calculateTotalAmount() {
+    // Fetch the total amount from the cart page
+    // Assuming you have an element with an id 'total-amount' in the cart page
+    const cartTotalElement = document.getElementById('total-amount');
 
-            // Ensure the element exists and contains a valid number
-            if (cartTotalElement && !isNaN(parseFloat(cartTotalElement.innerText))) {
-                return parseFloat(cartTotalElement.innerText) * 100; // Assuming the total is in cents
-            } else {
-                // Return a default value or handle the case where the total amount is not available
-                return 0;
-            }
-        }
+    // Ensure the element exists and contains a valid number
+    if (cartTotalElement && !isNaN(parseFloat(cartTotalElement.innerText.replace('$', '')))) {
+        return parseFloat(cartTotalElement.innerText.replace('$', '')) * 100; // Assuming the total is in cents
+    } else {
+        // Return a default value or handle the case where the total amount is not available
+        return 0;
+    }
+}
 function mapCartItems(cartItems) {
     return cartItems.map(item => ({
         pID: item.productId,
@@ -254,26 +269,27 @@ function mapCartItems(cartItems) {
     }));
 }
 
-function loadCartItems() {
-    // Assuming you have an endpoint to retrieve cart items from the server
-    const cartItemsEndpoint = 'http://localhost:3000/cart-items';
+async function loadCartItems() {
+    try {
+        const response = await fetch('http://localhost:3000/cart-items');
 
-    return fetch(cartItemsEndpoint)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch cart items');
-            }
-            return response.json();
-        })
-        .then(cartItems => {
-            console.log('Loaded cart items:', cartItems);
-            return cartItems;
-        })
-        .catch(error => {
-            console.error('Error loading cart items:', error);
-            return []; // Return an empty array or handle the error as needed
-        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch cart items');
+        }
+
+        const cartItems = await response.json();
+        const totalAmount = calculateTotalAmount(cartItems);
+
+        console.log('Loaded cart items and total cost:', { cartItems, totalAmount });
+
+        return { cartItems, totalAmount };
+    } catch (error) {
+        console.error('Error loading cart items:', error);
+        return { cartItems: [], totalAmount: 0 };
+    }
 }
+console.log('Total Amount calculated on the client:', totalAmount);
+console.log('Data sent to the server:', { formData, totalAmount });
     </script>
 
 

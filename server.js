@@ -282,67 +282,148 @@ app.delete('/remove-cart-item/:productId', (req, res) => {
   res.json(updatedCart);
 });
 
+var currentDate = new Date();
+
+// Get the current date components
+var year = currentDate.getFullYear();
+var month = currentDate.getMonth() + 1; // Months are zero-based, so we add 1
+var day = currentDate.getDate();
+
+// Format the date as a string (e.g., "YYYY-MM-DD")
+var formattedDate = year + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day;
 
 
-app.post('/submit-order', async (req, res) => {
+
+
+
+// Utility function for handling transactions
+async function runTransaction(connection, transactionCallback) {
   try {
-    const formData = req.body.formData;
-
-    // Log the received formData
-    console.log('Received formData:', formData);
-
-    // Validate that 'First_Name' is not empty
-    if (!formData.fname) {
-      return res.status(400).json({ success: false, message: 'First Name is required.' });
-    }
-
     // Begin transaction
     await connection.beginTransaction();
 
-    // Insert order into MySQL
-    const orderResult = await connection.query(
-      'INSERT INTO orders (Order_Cost, Order_Status, userId, First_Name, Last_Name, Email, Address, Phone_No) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [formData.totalCost, 'Pending', formData.userId, formData.fname, formData.lname, formData.email, formData.address, formData.phone]
-    );
-
-    if (!orderResult || !orderResult[0] || !orderResult[0].insertId) {
-      throw new Error('Failed to insert order into the database.');
-    }
-
-    const orderId = orderResult[0].insertId;
-    console.log('Order ID:', orderId);
-    console.log('Cart Items:', formData.cartItems);
-    console.log('Cart items before mapping:', cartItems);
-    console.log('Mapped cart items:', mapCartItems(cartItems));
-
-    // Insert order items into MySQL
-    for (const item of formData.cartItems) {
-      const [itemResult] = await connection.query(
-          'INSERT INTO order_items (Order_ID, pID, Product_Name, Image, Price, userId, Quantity, First_Name, Last_Name, Order_Date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)',
-          [orderId, item.pID, item.product, item.image, item.price, formData.userId, item.quantity, formData.fname, formData.lname]
-      );
-
-      console.log('Item result:', itemResult);
-
-      if (!itemResult || !itemResult.insertId) {
-          console.error('Failed to insert order item into the database:', itemResult);
-          throw new Error('Failed to insert order item into the database.');
-      }
-    }
+    // Execute the transaction callback, which should contain your database queries
+    const result = await transactionCallback();
 
     // Commit the transaction
     await connection.commit();
 
-    // Send the client a success response
-    res.json({ success: true, orderId: orderId });
+    // Return the result of the transaction
+    return result;
   } catch (error) {
     // Rollback the transaction in case of an error
     await connection.rollback();
+    throw error; // Re-throw the error to be caught by the calling function
+  }
+}
+
+// Your /submit-order route using the runTransaction utility function
+app.post('/submit-order', async (req, res) => {
+  try {
+    const formData = req.body.formData;
+    const totalAmount = req.body.totalAmount;
+
+    // Validate that 'First_Name' is not empty
+    if (!formData || !formData.fname || !formData.lname || !formData.email || !formData.address || !formData.phone) {
+      console.error('Validation failed. Incomplete form data. FormData:', formData);
+      throw new Error('Incomplete form data');
+    }
+
+    // Get userId from the session
+    const userId = req.session.userId;
+    const orderCost = parseFloat(totalAmount.replace(/[^0-9.]/g, ''));
+    const formattedOrderCost = Number(orderCost);
+    console.log('Order Cost:',formattedOrderCost);
+
+    // Get the current date components
+    var currentDate = new Date();
+    var year = currentDate.getFullYear();
+    var month = currentDate.getMonth() + 1;
+    var day = currentDate.getDate();
+    var formattedDate = year + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day;
+
+    // Define the transaction callback
+    const transactionCallback = async () => {
+      // Insert order into MySQL
+      const insertOrderQuery = `
+       INSERT INTO orders (Order_Cost, Order_Status, userId, First_Name, Last_Name, Email, Address, Phone_No, Order_Date)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+     `;
+
+    const orderValues = [
+    formattedOrderCost,
+    'Pending',
+    userId,
+    formData.fname,
+    formData.lname,
+    formData.email,
+    formData.address,
+    formData.phone,
+    formattedDate
+  ];
+
+  const orderResult = await connection.query(insertOrderQuery, orderValues);
+
+      if (!orderResult || !orderResult[0]) {
+        console.error('Invalid orderResult:', orderResult);
+        throw new Error('Failed to insert order into the database.');
+      }
+
+      const orderId = orderResult[0].insertId;
+
+      if (!orderId) {
+        console.error('No insertId found in orderResult:', orderResult);
+        throw new Error('Failed to retrieve insertId after order insertion.');
+      }
+
+      console.log('Order inserted successfully. Order ID:', orderId);
+      console.log('Cart Items:', formData.cartItems);
+      console.log('Cart items before mapping:', cartItems);
+      console.log('Mapped cart items:', mapCartItems(cartItems));
+
+      // Insert order items into MySQL
+      for (const item of formData.cartItems) {
+        const [itemResult] = await connection.query(
+          'INSERT INTO order_items (Order_ID, pID, Product_Name, Image, Price, userId, Quantity, First_Name, Last_Name, Order_Date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)',
+          [orderId, item.pID, item.product, item.image, item.price, formData.userId, item.quantity, formData.fname, formData.lname]
+        );
+
+        console.log('Item result:', itemResult);
+
+        if (!itemResult || !itemResult.insertId) {
+          console.error('Failed to insert order item into the database:', itemResult);
+          throw new Error('Failed to insert order item into the database.');
+        }
+      }
+
+      // Return any result you want to send back to the calling function
+      return { success: true, orderId: orderId };
+    };
+
+    // Execute the transaction using the utility function
+    const result = await runTransaction(connection, transactionCallback);
+
+    // Send the client a success response
+    res.json(result);
+  } catch (error) {
+    // Handle the error
     console.error('Error processing checkout:', error);
 
+    // Send an error response
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
+function calculateTotalCost(cartItems) {
+  // Check if cartItems is defined and has elements
+  if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+    return 0; // Return 0 or handle the case when cartItems is empty
+  }
+  return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
+}
 
 
 
@@ -398,7 +479,7 @@ app.post('/login', (req, res) => {
     // Redirect the user to a dashboard or home page
     // Pass the user's first name to the home page
     console.log('User logged in:', user.First_Name);
-    res.redirect('/home.html?fname=' + encodeURIComponent(user.First_Name));
+    res.redirect('/index.html?fname=' + encodeURIComponent(user.First_Name));
   });
 });
 

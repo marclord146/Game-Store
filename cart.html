@@ -294,7 +294,7 @@ function updateCartItemQuantity(productId, newQuantity) {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
     localStorage.setItem('totalAmount', totalAmount);
     // Redirect to the checkout page or perform other necessary actions
-    window.location.href = 'checkout.html';
+    window.location.href = `checkout.html?totalAmount=${encodeURIComponent(totalAmount)}`;
     }
 
 
